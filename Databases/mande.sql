@@ -34,7 +34,7 @@ CREATE TABLE Trabajador (
     fotoCedula VARCHAR(200),
 
     CONSTRAINT Trabajador_PK PRIMARY KEY (celular),
-    CONSTRAINT Trabajador_FK FOREIGN KEY (celular)
+    CONSTRAINT Trabajador_FK FOREIGN KEY (celular) REFERENCES Usuario(celular)
 ); 
 
 CREATE TABLE Labor (
@@ -61,7 +61,7 @@ CREATE TABLE Debito (
     saldo NUMERIC(10,2),
 
     CONSTRAINT Debito_PK PRIMARY KEY (numTarjeta),
-    CONSTRAINT Debito_FK FOREIGN KEY (numTarjeta) REFERENCES Tarjeta(numTarjeta), 
+    CONSTRAINT Debito_FK FOREIGN KEY (numTarjeta) REFERENCES Tarjeta(numTarjeta)
 );
 
 CREATE TABLE Credito (
@@ -101,7 +101,7 @@ CREATE TABLE Realiza (
     codLabor CHAR(6),
 
     CONSTRAINT Realiza_Trabajador_FK FOREIGN KEY (celularTra) REFERENCES Trabajador(celular),
-    CONSTRAINT Realiza_Labor_FK FOREIGN KEY (codLabor) REFERENCES ()
+    CONSTRAINT Realiza_Labor_FK FOREIGN KEY (codLabor) REFERENCES Labor(codLabor)
 );
 
 
