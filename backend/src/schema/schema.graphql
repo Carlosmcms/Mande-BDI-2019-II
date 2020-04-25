@@ -1,0 +1,28 @@
+type Query {
+  "Login"
+  login(celular: String!, contrasena: String!): Boolean!
+
+}
+
+
+type Mutation {
+  "Anadir un  Usuario"
+   CrearUsuario(usuario: UsuarioInput!): Boolean! 
+}
+type Usuario {
+  nombre: String!
+  apellido: String!
+  celular: String!
+  contrasena: String!
+  direccion: String!
+  email: String!
+}
+input UsuarioInput {
+  nombre: String!
+  apellido: String!
+  celular: String!
+  contrasena: String!
+  direccion: String!
+  email: String!
+}
+

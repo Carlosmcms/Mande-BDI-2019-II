@@ -15,6 +15,9 @@ CREATE TABLE Usuario (
 
     CONSTRAINT Usuario_PK PRIMARY KEY (celular)
 );
+CREATE VIEW Login as
+SELECT celular, contrasena 
+FROM Usuario;
 
 CREATE TABLE Cliente (
     celular CHAR(10),
