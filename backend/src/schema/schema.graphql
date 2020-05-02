@@ -1,9 +1,13 @@
 type Query {
+  "Verificar si existe el usuario"
+  verificarCelular(celular: String!): Boolean!
   "Login"
   login(celular: String!, contrasena: String!): Boolean!
-
+  "Informacion de un cliente"
+  cliente(celular: String!): Cliente!
+  "Informacion de un trabajador"
+  trabajador(celular: String!): Trabajador!
 }
-
 
 type Mutation {
   "Anadir un  Usuario"
@@ -16,7 +20,21 @@ type Usuario {
   contrasena: String!
   direccion: String!
   email: String!
+  cedula: String!
 }
+type Cliente {
+    recibo: String!  
+    usuario: Usuario! 
+}
+type Trabajador{
+    usuario: Usuario! 
+    estado: Boolean!
+    cantservicios: Int!
+    fotocedula: String!
+    fotoperfil: String!
+    promedio: Float!
+}
+
 input UsuarioInput {
   nombre: String!
   apellido: String!
@@ -24,5 +42,6 @@ input UsuarioInput {
   contrasena: String!
   direccion: String!
   email: String!
+  cedula: String!
 }
 

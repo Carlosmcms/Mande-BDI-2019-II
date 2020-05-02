@@ -9,10 +9,10 @@ const mutation = {
                 celular: usuario.celular,
                 contrasena: usuario.contrasena,
                 direccion: usuario.direccion,
-                email:  usuario.email
+                email:  usuario.email,
+                cedula: usuario.cedula
             }
-
-           return  UserC.createUser(u);
+            return  UserC.createUser(u);
         }
     }
 }

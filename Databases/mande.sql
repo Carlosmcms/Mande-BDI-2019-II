@@ -8,14 +8,13 @@ CREATE TABLE Usuario (
     celular CHAR(10),
     nombre VARCHAR(20) NOT NULL,
     apellido VARCHAR(20) NOT NULL,
-    direccion POINT NOT NULL,
+    direccion geometry(POINT,4326) NOT NULL,--MODIFIQUE EL TIPO DE ESTE DATO
     contrasena VARCHAR(30) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
     cedula CHAR(10) NOT NULL UNIQUE,
-
     CONSTRAINT Usuario_PK PRIMARY KEY (celular)
 );
-CREATE VIEW Login as
+CREATE VIEW Login as --Cree esta vista
 SELECT celular, contrasena 
 FROM Usuario;
 
