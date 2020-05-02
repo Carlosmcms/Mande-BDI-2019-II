@@ -1,8 +1,11 @@
 const { IResolvers } = require( 'graphql-tools');
 const  UserC = require('../controller/UsuarioController');
+const  clienteC = require('../controller/ClienteController');
+const trabajadorC = require('../controller/TrabajadorController');
+
 const mutation = {
     Mutation: {
-        CrearUsuario(__, { usuario }){
+        async CrearUsuario(__, { usuario }){
             const u = {
                 nombre: usuario.nombre,
                 apellido: usuario.apellido,
@@ -12,7 +15,7 @@ const mutation = {
                 email:  usuario.email,
                 cedula: usuario.cedula
             }
-            return  UserC.createUser(u);
+            return  await UserC.createUser(u);
         }
     }
 }

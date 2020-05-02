@@ -4,9 +4,9 @@ type Query {
   "Login"
   login(celular: String!, contrasena: String!): Boolean!
   "Informacion de un cliente"
-  cliente(celular: String!): Cliente!
+  cliente(celular: String!): Cliente
   "Informacion de un trabajador"
-  trabajador(celular: String!): Trabajador!
+  trabajador(celular: String!): Trabajador
 }
 
 type Mutation {

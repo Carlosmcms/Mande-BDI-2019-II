@@ -14,10 +14,7 @@ const verificar = async (celular) => {
        return found; 
 
     } catch (e){
-        status(500).send({
-            status: 'Error',
-            message: e.message,
-        });
+        console.log(e);
     }
 }
 const login = async (celular, contrasena) =>{
@@ -37,10 +34,7 @@ const login = async (celular, contrasena) =>{
        return found;      
 
     } catch (e){
-        status(500).send({
-            status: 'Error',
-            message: e.message,
-        });
+        console.log(e);
     }
 }
 
@@ -67,10 +61,7 @@ const createUser =  async ( usuario ) =>{
 
     } catch(e) {
         return false;
-        status(500).send({
-            status: 'Error',
-            message: e.message,
-        });
+        console.log(e);
     }
 }
 
@@ -82,12 +73,10 @@ const getUsuario = async ( celular ) =>{
          const c = user.rows[0];
          return c;
     }catch(e){
-        status(500).send({
-          status: 'Error',
-          message: e.message,
-        });
+        console.log(e);
     }
 }
+
 
 module.exports = {
   verificar,

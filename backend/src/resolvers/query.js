@@ -5,27 +5,33 @@ const trabajadorC = require('../controller/TrabajadorController');
 
 const query = {
     Query:{
-        login(__, { celular, contrasena }){
-           return  userC.login(celular, contrasena);
+        async login(__, { celular, contrasena }){
+           return  await userC.login(celular, contrasena);
         },
 
-        verificarCelular(__, { celular }){
-            return userC.verificar(celular);
+        async verificarCelular(__, { celular }){
+            return await userC.verificar(celular);
         },
 
-        cliente(__,{ celular }){
-        
-            const r = (clienteC.getCliente(celular)).recibo;
-        
+        async cliente(__,{ celular }){   
+            const r = await clienteC.getCliente( celular );
+            if ( r === undefined ) {
+                return null
+            } 
+                  
             return  {
-                recibo: r,
-                usuario: userC.getUsuario( celular),
+                recibo: r.recibo,
+                usuario: userC.getUsuario(celular),
             }
         },
         
-        trabajador(__,{ celular }){
-            const t = trabajadorC.getTrabajador(celular);
-                    
+        async trabajador(__,{ celular }){
+            const t = await trabajadorC.getTrabajador(celular);
+            
+            if ( t === undefined ) {
+                return null
+            } 
+
             return {
                 usuario: userC.getUsuario( celular),
                 estado: t.estado,
@@ -34,6 +40,7 @@ const query = {
                 fotoperfil: t.fotoperfil,
                 promedio: t.promedio          
             }
+        
         }
     }
 }
