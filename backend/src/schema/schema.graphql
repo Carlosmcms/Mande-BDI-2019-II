@@ -12,6 +12,12 @@ type Query {
 type Mutation {
   "Anadir un  Usuario"
    CrearUsuario(usuario: UsuarioInput!): Boolean! 
+   CrearTrabajador(trabajador: TrabajadorInput!): Trabajador 
+   CrearCliente(cliente: ClienteInput!): Cliente
+   AgregarLabor(labor: LaborInput!): String
+
+   CambiarEstadoTrab(trabajador: Trabajador!,estado: Boolean!): Boolean
+   CalificarTrabajador(trabajador: Trabajador!, calificacion: Float!) Float
 }
 type Usuario {
   nombre: String!
@@ -34,7 +40,10 @@ type Trabajador{
     fotoperfil: String!
     promedio: Float!
 }
-
+type Labor{
+    trabajador: Trabajador!
+    labor: String!
+} 
 input UsuarioInput {
   nombre: String!
   apellido: String!
@@ -45,3 +54,21 @@ input UsuarioInput {
   cedula: String!
 }
 
+input TrabajadorInput{
+    usuario: Usuario! 
+    estado: Boolean!
+    cantservicios: Int!
+    fotocedula: String!
+    fotoperfil: String!
+    promedio: Float!
+}
+
+input ClienteInput {
+    recibo: String!  
+    usuario: Usuario! 
+}
+
+input LaborInput{
+    trabajador: Trabajador!
+    labor: String!
+} 

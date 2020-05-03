@@ -1,5 +1,31 @@
 const { pool } = require('./bdconnect');
 
+const createWorker =  async ( trabajador ) =>{
+    try{
+    //   const text =
+    //    `INSERT INTO trabajador (usuario, estado, cantServicios, fotoCedula, fotoPerfil, promedio)
+    //    VALUES($1, $2, $3, $4,  ST_GeomFromText('POINT( $5 )',4326), $6) `;//Este es el que se debe de usar
+        const text =
+         `INSERT INTO trabajador (usuario, estado, cantServicios, fotoCedula, fotoPerfil, promedio) 
+        VALUES ($1, $2, $3, $4, $5, $6) `;//Pruebas
+       
+       const values = [
+           trabajador.usuario,
+           trabajador.estado,
+           trabajador.cantServicios,
+           trabajador.fotocedula,
+           trabajador.fotoperfil,
+           trabajador.promedio
+       ]
+       await pool.query(text, values);
+       return true;   
+
+    } catch(e) {
+        return false;
+        console.log(e);
+    }
+}
+
 const getTrabajador = async ( celular ) =>{
     try{
         
@@ -19,5 +45,6 @@ const getTrabajador = async ( celular ) =>{
 
 
 module.exports = {
-   getTrabajador
+   getTrabajador,
+   createWorker
 };
