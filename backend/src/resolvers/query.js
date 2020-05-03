@@ -2,9 +2,10 @@ const { IResolvers } = require( 'graphql-tools');
 const  userC = require('../controller/UsuarioController');
 const  clienteC = require('../controller/ClienteController');
 const trabajadorC = require('../controller/TrabajadorController');
-
+const servicioC = require('../controller/ServicioController');
 const query = {
     Query:{
+        //Usuario-------------------------------------------------
         async login(__, { celular, contrasena }){
            return  await userC.login(celular, contrasena);
         },
@@ -12,6 +13,7 @@ const query = {
         async verificarCelular(__, { celular }){
             return await userC.verificar(celular);
         },
+        //Cliente-------------------------------------------------
 
         async cliente(__,{ celular }){   
             const r = await clienteC.getCliente( celular );
@@ -24,7 +26,7 @@ const query = {
                 usuario: userC.getUsuario(celular),
             }
         },
-        
+        //trabajador-------------------------------------------------
         async trabajador(__,{ celular }){
             const t = await trabajadorC.getTrabajador(celular);
             
@@ -40,8 +42,21 @@ const query = {
                 fotoperfil: t.fotoperfil,
                 promedio: t.promedio          
             }
-        
+        },
+        async buscarTrabajador(__, { labor, promedio, precio }){
+            const t = await trabajadorC.getTrabajadoxlabor( labor,promedio);
+           
+            if(t===undefined){
+                return { mensaje: 'No se encontro ningun trabajador' };
+            }
+            return t;
+        },
+        //Servicio--------------------------------------------------------------
+        async pago(__, { codServicio }){
+            const p = await servicioC.getPago( codServicio );
+            return p;
         }
+
     }
 }
 

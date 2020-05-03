@@ -1,40 +1,34 @@
 const { pool } = require('./bdconnect');
 
 const verificar = async (celular) => {
-     try{
-       const cuentas = await pool.query('SELECT * FROM login'); //login es una vista       
-       const c = cuentas.rows;
-       let found = false;
-       for(i = 0; i< c.length; i++){
-           if(c[i].celular== celular) {                   
-               found= true;
-               break;
-           }
-       }
-       return found; 
+    try{
 
+       const text =`SELECT * FROM login where celular=$1`
+       const cuentas = await pool.query(text,[celular]); //login es una vista 
+      
+       const c = cuentas.rows[0];
+       if(c!=null){
+           return true;
+       }else {
+           return false;
+       }
     } catch (e){
         console.log(e);
+        return false;
     }
 }
 const login = async (celular, contrasena) =>{
-    try{      
-       const cuentas = await pool.query('SELECT * FROM login');     
-       const c = cuentas.rows;       
+    try{
+        const text = `SELECT (contrasena = crypt($1, contrasena)) AS contrasena 
+        FROM login where celular=$2`
 
-       let found = false;
+       const cuentas = await pool.query(text,[contrasena,celular]);     
+       const c = cuentas.rows[0];             
+       return c.contrasena;  
 
-       for(i = 0; i< c.length; i++){
-           if(c[i].celular== celular 
-               && c[i].contrasena==contrasena) {                   
-               found= true;
-               break;
-           }
-       }
-       return found;      
-
-    } catch (e){
+    } catch (e){     
         console.log(e);
+        return false;
     }
 }
 
@@ -42,10 +36,11 @@ const createUser =  async ( usuario ) =>{
     try{
     //   const text =
     //     `INSERT INTO usuario(celular, nombre, apellido, direccion, contrasena, email, cedula) 
-    //    VALUES($1, $2, $3, $4,  ST_GeomFromText('POINT( $5 )',4326), $6) `;//Este es el que se debe de usar
+    //    VALUES($1, $2, $3, ST_GeomFromText('POINT( $4 )',4326), crypt ('12345', gen_salt ('md5')),$6, $7) `;
+    //Este es el que se debe de usar
         const text =
          `INSERT INTO usuario (celular, nombre, apellido, direccion, contrasena, email, cedula) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7) `;//Pruebas
+        VALUES ($1, $2, $3, $4, crypt ($5, gen_salt ('md5')), $6, $7) `;//Pruebas
        
        const values = [
            usuario.celular,

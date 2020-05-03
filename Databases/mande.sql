@@ -9,14 +9,12 @@ CREATE TABLE Usuario (
     nombre VARCHAR(20) NOT NULL,
     apellido VARCHAR(20) NOT NULL,
     direccion geometry(POINT,4326) NOT NULL,--MODIFIQUE EL TIPO DE ESTE DATO
-    contrasena VARCHAR(30) NOT NULL,
+    contrasena VARCHAR NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
     cedula CHAR(10) NOT NULL UNIQUE,
     CONSTRAINT Usuario_PK PRIMARY KEY (celular)
 );
-CREATE VIEW Login as --Cree esta vista
-SELECT celular, contrasena 
-FROM Usuario;
+
 
 CREATE TABLE Cliente (
     celular CHAR(10),
@@ -58,13 +56,6 @@ CREATE TABLE Tarjeta (
     CONSTRAINT Tarjeta_Cliente_FK FOREIGN KEY (celular) REFERENCES Cliente(celular)
 );
 
-CREATE TABLE Debito (
-    numTarjeta CHAR(6),
-    saldo NUMERIC(10,2),
-
-    CONSTRAINT Debito_PK PRIMARY KEY (numTarjeta),
-    CONSTRAINT Debito_FK FOREIGN KEY (numTarjeta) REFERENCES Tarjeta(numTarjeta)
-);
 
 CREATE TABLE Credito (
     numTarjeta CHAR(6),
@@ -86,14 +77,12 @@ CREATE TABLE Servicio (
     celularTra CHAR(10)  NOT NULL,
     codLabor CHAR(6)  NOT NULL,
     numTarjetaCred CHAR(6),
-    numTarjetaDeb CHAR(6),
 
     CONSTRAINT Servicio_PK PRIMARY KEY (codServicio),
     CONSTRAINT Servicio_Cliente_FK FOREIGN KEY (celularCli) REFERENCES Cliente(celular),
     CONSTRAINT Servicio_Trabajador_FK FOREIGN KEY (celularTra) REFERENCES Trabajador(celular),
     CONSTRAINT Servicio_Labor_FK FOREIGN KEY (codLabor) REFERENCES Labor(codLabor),
     CONSTRAINT Servicio_Credito_FK FOREIGN KEY (numTarjetaCred) REFERENCES Credito(numTarjeta),
-    CONSTRAINT Servicio_Debito_FK FOREIGN KEY (numTarjetaDeb) REFERENCES Debito(numTarjeta)
 );
 
 -- Relaciones
@@ -106,12 +95,24 @@ CREATE TABLE Realiza (
     CONSTRAINT Realiza_Labor_FK FOREIGN KEY (codLabor) REFERENCES Labor(codLabor)
 );
 
+CREATE VIEW laboresTrabajador as
+SELECT
+usuario.nombre as nombre_trabajador,
+labor.nombre as nombre_labor, 
+labor.precioxhora as precio, 
+labor.descripcion, trabajador.celular,
+trabajador.promedio, trabajador.fotoperfil,
+trabajador.estado
+FROM trabajador,realiza, labor, usuario
+WHERE 
+trabajador.celular=usuario.celular
+and trabajador.celular=realiza.celulartra 
+and labor.codlabor = realiza.codlabor;
 
 
-
-
-
-
+CREATE VIEW Login as --Cree esta vista
+SELECT celular, contrasena 
+FROM Usuario;
 
 
 
