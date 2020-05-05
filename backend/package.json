@@ -21,7 +21,8 @@
     "graphql-tools": "^5.0.0",
     "http": "0.0.1-security",
     "lodash": "^4.17.15",
-    "ncp": "^2.0.0"
+    "ncp": "^2.0.0",
+    "pg": "^8.0.3"
   },
   "devDependencies": {
     "@types/compression": "^1.7.0",

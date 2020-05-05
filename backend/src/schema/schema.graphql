@@ -7,10 +7,11 @@ type Query {
   cliente(celular: String!): Cliente
   #"Informacion de un trabajador"
   trabajador(celular: String!): Trabajador
-  #Filtrar trabajador
-  buscarTrabajador(labor: String!, promedio: Float, precio: Float): [realiza] #Falta filtrar por  distancia
+  #Filtrar trabajador en un radio de 3km
+  buscarTrabajador(labor: String!, celularCliente: String ): [realiza] #Falta filtrar por  distancia
   #Calcular tiempo de un trabajado
   pago(codServicio: String!): Float
+  
 }
 
 
@@ -45,16 +46,19 @@ type realiza {
   promedio: Float!
   fotoperfil: String!
   nombre_labor: String!
+  direcciontext: String!
   precio: Float!
   descripcion: String!
   estado: Boolean
-  
+  distancia: String
 }
+
 input UsuarioInput {
   nombre: String!
   apellido: String!
   celular: String!
   contrasena: String!
+  #longitud latitud
   direccion: String!
   email: String!
   cedula: String!

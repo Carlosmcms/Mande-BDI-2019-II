@@ -1,4 +1,5 @@
 const { pool } = require('./bdconnect');
+const { getUsuario } = require('./UsuarioController');
 
 const getTrabajador = async ( celular ) =>{
     try{
@@ -16,51 +17,29 @@ const getTrabajador = async ( celular ) =>{
     }
 }
 
-const getTrabajadoxlabor = async ( labor, promedio, precio ) =>{
+const getTrabajadoxlabor = async ( labor, celularCliente ) =>{
     
     try{
-        let text;
-        let args;
-        if(promedio===undefined&&precio===undefined){
-            text =
-          `SELECT * FROM laboresTrabajador 
-          WHERE nombre_labor=$1 and estado=true
-          ORDER BY promedio`;  
-          args = [labor];
-        } else if(precio===undefined){
-            text =
-            `SELECT * FROM laboresTrabajador 
-            WHERE nombre_labor=$1 
-            and promedio=$2
-            and estado=true
-            ORDER BY promedio`;  
-            args = [labor, promedio];
-        } else if(promedio===undefined){
-            text =
-            `SELECT * FROM laboresTrabajador 
-            WHERE nombre_labor=$1 
-            and precio=$2
-            and estado=true
-            ORDER BY promedio`;
-            args = [labor, precio];
-        }else {
-            text =
-            `SELECT * FROM laboresTrabajador 
-            WHERE nombre_labor=$1 
-            and precio=$2
-            and promedio=$3
-            and estado=true
-            ORDER BY promedio`;
-            args = [labor,promedio, precio];
-        }
-                 
-        const l= await pool.query(text, args);
+        const u = await getUsuario(celularCliente);
+        
+           //RETORNA TODOS LOS TRABAJADORES QUE ESTEN EN UN RADIO DE 3KM
+        const text =
+          `SELECT *,ST_AsTEXT(direccion) as direccionText FROM 
+              (SELECT *,100000*ST_DISTANCE (ST_GEOMFROMTEXT ('POINT(${u.direccion})',4326),
+                  ST_GEOMFROMTEXT (ST_AsTEXT(direccion),4326)) AS distancia
+                 FROM laborestrabajador) AS dis 
+              WHERE distancia<=3000 and nombre_labor='${labor}' and estado=true
+              ORDER BY promedio`;  
+                   
+        const l= await pool.query(text);
 
         const laboArray = l.rows;
         let labores = [];
         for(i = 0; i< laboArray.length; i++){
             labores[i]=laboArray[i];
         }
+        console.log(labores);
+
         return labores;
         
     }catch(e) {
@@ -68,8 +47,6 @@ const getTrabajadoxlabor = async ( labor, promedio, precio ) =>{
         return undefined;   
     }
 }
-
-
 
 module.exports = {
    getTrabajador,

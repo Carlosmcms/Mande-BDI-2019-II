@@ -43,9 +43,9 @@ const query = {
                 promedio: t.promedio          
             }
         },
-        async buscarTrabajador(__, { labor, promedio, precio }){
-            const t = await trabajadorC.getTrabajadoxlabor( labor,promedio);
-           
+        async buscarTrabajador(__, { labor, celularCliente }){
+            const t = await trabajadorC.getTrabajadoxlabor( labor, celularCliente);
+            return t;
             if(t===undefined){
                 return { mensaje: 'No se encontro ningun trabajador' };
             }
