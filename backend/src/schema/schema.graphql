@@ -1,19 +1,25 @@
 type Query {
   #"Verificar si existe el usuario"
   verificarCelular(celular: String!): Boolean!
+
   #"Login"
   login(celular: String!, contrasena: String!): Boolean!
+
   #"Informacion de un cliente"
   cliente(celular: String!): Cliente
+
   #"Informacion de un trabajador"
   trabajador(celular: String!): Trabajador
-  #Filtrar trabajador en un radio de 3km
-  buscarTrabajador(labor: String!, celularCliente: String ): [realiza] #Falta filtrar por  distancia
-  #Calcular tiempo de un trabajado
-  pago(codServicio: String!): Float
-  
-}
 
+  #Filtrar trabajador en un radio de 3km
+  buscarTrabajador(labor: String!, celularCliente: String!): [Realiza] 
+
+  #obtener el total a pagar
+  pago(codServicio: String!): Float
+
+  #Informacion de los trabajos disponibles
+  labor(nombre: String): [Labor]
+}
 
 type Mutation {
   "Anadir un  Usuario"
@@ -40,7 +46,7 @@ type Trabajador{
     promedio: Float!
 }
 
-type realiza {
+type Realiza {
   nombre_trabajador: String!
   celular: String!
   promedio: Float!
@@ -52,13 +58,16 @@ type realiza {
   estado: Boolean
   distancia: String
 }
-
+type Labor{
+  nombre: String!
+  codigo: String!
+  descripcion: String!
+}
 input UsuarioInput {
   nombre: String!
   apellido: String!
   celular: String!
   contrasena: String!
-  #longitud latitud
   direccion: String!
   email: String!
   cedula: String!

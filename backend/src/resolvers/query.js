@@ -3,6 +3,9 @@ const  userC = require('../controller/UsuarioController');
 const  clienteC = require('../controller/ClienteController');
 const trabajadorC = require('../controller/TrabajadorController');
 const servicioC = require('../controller/ServicioController');
+const laborC = require('../controller/LaborController');
+
+
 const query = {
     Query:{
         //Usuario-------------------------------------------------
@@ -19,8 +22,7 @@ const query = {
             const r = await clienteC.getCliente( celular );
             if ( r === undefined ) {
                 return null
-            } 
-                  
+            }                  
             return  {
                 recibo: r.recibo,
                 usuario: userC.getUsuario(celular),
@@ -45,8 +47,8 @@ const query = {
         },
         async buscarTrabajador(__, { labor, celularCliente }){
             const t = await trabajadorC.getTrabajadoxlabor( labor, celularCliente);
-            return t;
-            if(t===undefined){
+            
+            if(t===[]){
                 return { mensaje: 'No se encontro ningun trabajador' };
             }
             return t;
@@ -55,6 +57,15 @@ const query = {
         async pago(__, { codServicio }){
             const p = await servicioC.getPago( codServicio );
             return p;
+        },
+        //Labor-----------------------------------------------------------------
+        async labor(__,{ nombre }){
+            const t = await laborC.getLabores();
+            
+            if(t===[]){
+                return [{ mensaje: 'No se encontro ninguna labor'}];
+            }
+            return t;
         }
 
     }

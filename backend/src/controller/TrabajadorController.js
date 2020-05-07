@@ -1,13 +1,13 @@
 const { pool } = require('./bdconnect');
-const { getUsuario } = require('./UsuarioController');
+const { getUsuario, invertirUbic } = require('./UsuarioController');
 
 const getTrabajador = async ( celular ) =>{
     try{
         
         const text =
-         `Select * FROM trabajador WHERE celular=$1`;  
+         `SELECT * FROM trabajador WHERE celular='${celular}'`;  
                 
-        const tr = await pool.query(text, [celular]);
+        const tr = await pool.query(text);
         const t = tr.rows[0];
 
         return t;
@@ -17,34 +17,40 @@ const getTrabajador = async ( celular ) =>{
     }
 }
 
-const getTrabajadoxlabor = async ( labor, celularCliente ) =>{
+const getTrabajadoxlabor = async ( labor, celularCliente) =>{
     
     try{
         const u = await getUsuario(celularCliente);
         
-           //RETORNA TODOS LOS TRABAJADORES QUE ESTEN EN UN RADIO DE 3KM
+        const ubic = invertirUbic(u.direccion); 
+           //RETORNA TODOS LOS TRABAJADORES QUE ESTEN EN UN RADIO DE 3KM y que coincidan
+          //con la labor y, si precio es true, ordena de mayor a menor       
         const text =
           `SELECT *,ST_AsTEXT(direccion) as direccionText FROM 
-              (SELECT *,100000*ST_DISTANCE (ST_GEOMFROMTEXT ('POINT(${u.direccion})',4326),
+              (SELECT *,100000*ST_DISTANCE (ST_GEOMFROMTEXT ('POINT(${ubic})',4326),
                   ST_GEOMFROMTEXT (ST_AsTEXT(direccion),4326)) AS distancia
                  FROM laborestrabajador) AS dis 
-              WHERE distancia<=3000 and nombre_labor='${labor}' and estado=true
-              ORDER BY promedio`;  
-                   
+            WHERE distancia<=3000 and nombre_labor='${labor}' and estado=true 
+            ORDER BY promedio desc`;             
+                        
         const l= await pool.query(text);
-
-        const laboArray = l.rows;
+    
         let labores = [];
-        for(i = 0; i< laboArray.length; i++){
-            labores[i]=laboArray[i];
+        for(i = 0; i< l.rows.length; i++){
+            let u = l.rows[i].direcciontext;
+            u = u.substring(u.indexOf("(")+1, u.indexOf(")")); 
+            u = invertirUbic(u);
+            let d = l.rows[i].distancia+" ";
+            d = d.substring(0, d.indexOf("."))+ "Metros";
+            labores[i]=l.rows[i];
+            labores[i].direcciontext = u;
+            labores[i].distancia = d;          
         }
-        console.log(labores);
-
         return labores;
         
     }catch(e) {
         console.log(e);
-        return undefined;   
+        return [];   
     }
 }
 

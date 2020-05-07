@@ -39,7 +39,7 @@ CREATE TABLE Trabajador (
 
 CREATE TABLE Labor (
     codLabor CHAR(6),
-    precioXHora NUMERIC(8,2),
+    
     nombre VARCHAR(20),
     descripcion VARCHAR(60),
 
@@ -90,6 +90,7 @@ CREATE TABLE Servicio (
 CREATE TABLE Realiza (
     celularTra CHAR(10),
     codLabor CHAR(6),
+    precioXHora NUMERIC(8,2),
 
     CONSTRAINT Realiza_Trabajador_FK FOREIGN KEY (celularTra) REFERENCES Trabajador(celular),
     CONSTRAINT Realiza_Labor_FK FOREIGN KEY (codLabor) REFERENCES Labor(codLabor)
@@ -99,10 +100,10 @@ CREATE VIEW laboresTrabajador as
 SELECT
 usuario.nombre as nombre_trabajador,
 labor.nombre as nombre_labor, 
-labor.precioxhora as precio, 
+realiza.precioxhora as precio, 
 labor.descripcion, trabajador.celular,
 trabajador.promedio, trabajador.fotoperfil,
-trabajador.estado
+trabajador.estado, usuario.direccion as direccion
 FROM trabajador,realiza, labor, usuario
 WHERE 
 trabajador.celular=usuario.celular
@@ -114,11 +115,21 @@ CREATE VIEW Login as --Cree esta vista
 SELECT celular, contrasena 
 FROM Usuario;
 
+--DATOS DE PRUEBA
+INSERT INTO trabajador VALUES ('3403134040',2,5.00,'true','una foto chingona','una foto de la cedula'),
+                             ('3056068989',1,3.00,'true','una foto chingona','una foto de la cedula'),
+							 ('3123123124',1,4.00,'true','una foto chingona','una foto de la cedula');
+INSERT INTO cliente VALUES ('3233134040', 'una foto del recibo'),
+                           ('3233135959', 'una foto del recibo2'),
+						   ('3134945959', 'una foto del recibo3');
+INSERT INTO Labor VALUES ('000001','FONTANERIA','Labores de fontaneria de todo tipo'),
+                         ('000002','ELECTRICIDAD','Labores de electricidad'),
+						 ('000003','SISTEMAS','Labores de sistemas');
+INSERT INTO realiza VALUES ('3403134040','000001',5000),('3403134040','000002',4000),('3056068989','000002',8000),('3123123124','000003',2000);
 
 
 
-
-
+----Nota agregar prexhora en realiza y borrar en labor y la vista 
 
 
 
