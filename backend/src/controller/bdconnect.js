@@ -11,12 +11,10 @@ const config = {
   port: 5432,
 };
 
-
 const pool = new Pool({ config });
 const client = new Client({ config });
 
 module.exports = {
   pool,
-  client
-}
-
+  client,
+};

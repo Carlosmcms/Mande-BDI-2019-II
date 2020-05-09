@@ -46,24 +46,15 @@ CREATE TABLE Labor (
     CONSTRAINT Labor_PK PRIMARY KEY (codLabor)
 );
 
-CREATE TABLE Tarjeta (
-    -- Encriptar numTarjeta
-    numTarjeta CHAR(6),
-    banco VARCHAR(20),
-    celular VARCHAR(10),
-
-    CONSTRAINT Tarjeta_PK PRIMARY KEY (numTarjeta),
-    CONSTRAINT Tarjeta_Cliente_FK FOREIGN KEY (celular) REFERENCES Cliente(celular)
-);
-
-
-CREATE TABLE Credito (
-    numTarjeta CHAR(6),
-    cvc CHAR(20),
+--Converti en una sola tabla y quite las limitaciones para poder encriptar los datos
+CREATE TABLE TarjetaCredito ( 
+    cvc VARCHAR,
     fVencimiento DATE,
-
-    CONSTRAINT Credito_PK PRIMARY KEY (numTarjeta),
-    CONSTRAINT Credito_FK FOREIGN KEY (numTarjeta) REFERENCES Tarjeta(numTarjeta)
+    numeroTarjeta VARCHAR,
+    banco VARCHAR,
+    celular VARCHAR,
+    CONSTRAINT TarjetaCredito_PK PRIMARY KEY (numeroTarjeta),
+    CONSTRAINT Tarjeta_Cliente_FK FOREIGN KEY (celular) REFERENCES Cliente(celular)
 );
 
 CREATE TABLE Servicio (
@@ -76,13 +67,13 @@ CREATE TABLE Servicio (
     celularCli CHAR(10)  NOT NULL,
     celularTra CHAR(10)  NOT NULL,
     codLabor CHAR(6)  NOT NULL,
-    numTarjetaCred CHAR(6),
+    numTarjetaCred VARCHAR,
 
     CONSTRAINT Servicio_PK PRIMARY KEY (codServicio),
     CONSTRAINT Servicio_Cliente_FK FOREIGN KEY (celularCli) REFERENCES Cliente(celular),
     CONSTRAINT Servicio_Trabajador_FK FOREIGN KEY (celularTra) REFERENCES Trabajador(celular),
     CONSTRAINT Servicio_Labor_FK FOREIGN KEY (codLabor) REFERENCES Labor(codLabor),
-    CONSTRAINT Servicio_Credito_FK FOREIGN KEY (numTarjetaCred) REFERENCES Credito(numTarjeta),
+    CONSTRAINT Servicio_TarjetaCredito_FK FOREIGN KEY (numTarjetaCred) REFERENCES TarjetaCredito(numeroTarjeta),
 );
 
 -- Relaciones
@@ -102,7 +93,7 @@ usuario.nombre as nombre_trabajador,
 labor.nombre as nombre_labor, 
 realiza.precioxhora as precio, 
 labor.descripcion, trabajador.celular,
-trabajador.promedio, trabajador.fotoperfil,
+trabajador.promedio, trabajador.fotoperfil,labor.codlabor,
 trabajador.estado, usuario.direccion as direccion
 FROM trabajador,realiza, labor, usuario
 WHERE 
@@ -111,21 +102,22 @@ and trabajador.celular=realiza.celulartra
 and labor.codlabor = realiza.codlabor;
 
 
-CREATE VIEW Login as --Cree esta vista
+CREATE VIEW Login as 
 SELECT celular, contrasena 
 FROM Usuario;
 
+
 --DATOS DE PRUEBA
-INSERT INTO trabajador VALUES ('3403134040',2,5.00,'true','una foto chingona','una foto de la cedula'),
-                             ('3056068989',1,3.00,'true','una foto chingona','una foto de la cedula'),
-							 ('3123123124',1,4.00,'true','una foto chingona','una foto de la cedula');
-INSERT INTO cliente VALUES ('3233134040', 'una foto del recibo'),
-                           ('3233135959', 'una foto del recibo2'),
-						   ('3134945959', 'una foto del recibo3');
-INSERT INTO Labor VALUES ('000001','FONTANERIA','Labores de fontaneria de todo tipo'),
-                         ('000002','ELECTRICIDAD','Labores de electricidad'),
-						 ('000003','SISTEMAS','Labores de sistemas');
-INSERT INTO realiza VALUES ('3403134040','000001',5000),('3403134040','000002',4000),('3056068989','000002',8000),('3123123124','000003',2000);
+--INSERT INTO trabajador VALUES ('3403134040',2,5.00,'true','una foto chingona','una foto de la cedula'),
+ --                            ('3056068989',1,3.00,'true','una foto chingona','una foto de la cedula'),
+--							 ('3123123124',1,4.00,'true','una foto chingona','una foto de la cedula');
+--INSERT INTO cliente VALUES ('3233134040', 'una foto del recibo'),
+  --                         ('3233135959', 'una foto del recibo2'),
+	--					   ('3134945959', 'una foto del recibo3');
+--INSERT INTO Labor VALUES ('000001','FONTANERIA','Labores de fontaneria de todo tipo'),
+  --                       ('000002','ELECTRICIDAD','Labores de electricidad'),
+	--					 ('000003','SISTEMAS','Labores de sistemas');
+--INSERT INTO realiza VALUES ('3403134040','000001',5000),('3403134040','000002',4000),('3056068989','000002',8000),('3123123124','000003',2000);
 
 
 

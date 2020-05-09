@@ -11,19 +11,25 @@ type Query {
   #"Informacion de un trabajador"
   trabajador(celular: String!): Trabajador
 
-  #Filtrar trabajador en un radio de 3km
-  buscarTrabajador(labor: String!, celularCliente: String!): [Realiza] 
+  #Filtrar los trabajadores por labor en un radio de 3km
+  buscarTrabajador(labor: String!, celularCliente: String!): [Realiza]
 
   #obtener el total a pagar
   pago(codServicio: String!): Float
 
   #Informacion de los trabajos disponibles
   labor(nombre: String): [Labor]
+
+  #Informacion de las labores que realiza un trabajador
+  misLabores(celular: String!): [Realiza]
+
+  #Informacion de TarjetaCredito
+  miTarjetadeCredito(celular: String!): TarjetaCredito!
 }
 
 type Mutation {
   "Anadir un  Usuario"
-   CrearUsuario(usuario: UsuarioInput!): Boolean! 
+  CrearUsuario(usuario: UsuarioInput!): Boolean!
 }
 type Usuario {
   nombre: String!
@@ -34,19 +40,19 @@ type Usuario {
   cedula: String!
 }
 type Cliente {
-    recibo: String!  
-    usuario: Usuario! 
+  recibo: String!
+  usuario: Usuario!
 }
-type Trabajador{
-    usuario: Usuario! 
-    estado: Boolean!
-    cantservicios: Int!
-    fotocedula: String!
-    fotoperfil: String!
-    promedio: Float!
+type Trabajador {
+  usuario: Usuario!
+  estado: Boolean!
+  cantservicios: Int!
+  fotocedula: String!
+  fotoperfil: String!
+  promedio: Float!
 }
-
 type Realiza {
+  codlabor: String!
   nombre_trabajador: String!
   celular: String!
   promedio: Float!
@@ -58,11 +64,19 @@ type Realiza {
   estado: Boolean
   distancia: String
 }
-type Labor{
+type Labor {
   nombre: String!
   codigo: String!
   descripcion: String!
 }
+
+type TarjetaCredito {
+  numerotarjeta: String!
+  banco: String!
+  cvc: String!
+  fvencimiento: String!
+}
+
 input UsuarioInput {
   nombre: String!
   apellido: String!
@@ -72,4 +86,3 @@ input UsuarioInput {
   email: String!
   cedula: String!
 }
-
