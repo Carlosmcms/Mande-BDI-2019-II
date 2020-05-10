@@ -40,30 +40,22 @@ const login = async (celular, contrasena) =>{
 
 const createUser =  async ( usuario ) =>{
     try{
-    //   const text =
-    //     `INSERT INTO usuario(celular, nombre, apellido, direccion, contrasena, email, cedula) 
-    //    VALUES($1, $2, $3, $4,  ST_GeomFromText('POINT( $5 )',4326), $6) `;//Este es el que se debe de usar
-        const text =
-         `INSERT INTO usuario (celular, nombre, apellido, direccion, contrasena, email, cedula) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7) `;//Pruebas
+       const text =
+         `INSERT INTO usuario(celular, nombre, apellido, direccion, contrasena, email, cedula) 
+           VALUES('${usuario.celular}', '${usuario.nombre}', '${usuario.apellido}', 
+            ST_GeomFromText('POINT(${usuario.direccion})',4326), 
+            crypt ('${usuario.contrasena}', gen_salt ('md5')),'${usuario.email}', '${usuario.cedula}') `;
+ 
+       await pool.query(text);
        
-       const values = [
-           usuario.celular,
-           usuario.nombre,
-           usuario.apellido,
-           usuario.direccion,
-           usuario.contrasena,
-           usuario.email,
-           usuario.cedula,
-       ]
-       await pool.query(text, values);
        return true;   
-
+ 
     } catch(e) {
-        return false;
         console.log(e);
+        return false;       
     }
 }
+
 
 const getUsuario = async ( celular ) =>{
     try{

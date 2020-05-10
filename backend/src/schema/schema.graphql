@@ -1,3 +1,5 @@
+
+
 type Query {
   "Verificar si existe el usuario"
   verificarCelular(celular: String!): Boolean!
@@ -12,12 +14,15 @@ type Query {
 type Mutation {
   "Anadir un  Usuario"
    CrearUsuario(usuario: UsuarioInput!): Boolean! 
-   CrearTrabajador(trabajador: TrabajadorInput!): Trabajador 
-   CrearCliente(cliente: ClienteInput!): Cliente
-   AgregarLabor(labor: LaborInput!): String
+   CrearTrabajador(trabajador: TrabajadorInput!): Boolean 
+   CrearCliente(cliente: ClienteInput!): Boolean
+   CrearLabor(labor: LaborInput!): String 
+   CambiarEstadoTrab(celular: String!,estado: Boolean!): Boolean
+   eliminarTrabajo(celular: String!, codigoLabor: String!): Boolean
+   registrarTrabajo(celular: String!, codigoLabor: String!, precioxHora: Float!): Boolean
+   calificarTrabajador(celular: String!, promedio: Float!, calificacion: Float!): Float!
 
-   CambiarEstadoTrab(trabajador: Trabajador!,estado: Boolean!): Boolean
-   CalificarTrabajador(trabajador: Trabajador!, calificacion: Float!) Float
+   crearTarjetaCredit(credito: CreditoInput!): Boolean
 }
 type Usuario {
   nombre: String!
@@ -30,10 +35,10 @@ type Usuario {
 }
 type Cliente {
     recibo: String!  
-    usuario: Usuario! 
+    celular : String! 
 }
 type Trabajador{
-    usuario: Usuario! 
+    celular: String! 
     estado: Boolean!
     cantservicios: Int!
     fotocedula: String!
@@ -41,9 +46,34 @@ type Trabajador{
     promedio: Float!
 }
 type Labor{
+    codigo: String!
+    nombre: String!
+    descripcion: String!
+}
+
+type Realiza{
     trabajador: Trabajador!
-    labor: String!
-} 
+    labor: Labor!
+    precioxHora: Float!
+}
+
+
+type Credito {
+  numerotarjeta: String!
+  banco: String!
+  cvc: String!
+  fvencimiento: String!
+  celular: String!
+}
+
+input CreditoInput {
+  numerotarjeta: String!
+  banco: String!
+  cvc: String!
+  fvencimiento: String!
+  celular: String!
+}
+
 input UsuarioInput {
   nombre: String!
   apellido: String!
@@ -55,7 +85,7 @@ input UsuarioInput {
 }
 
 input TrabajadorInput{
-    usuario: Usuario! 
+    celular: String!
     estado: Boolean!
     cantservicios: Int!
     fotocedula: String!
@@ -65,10 +95,17 @@ input TrabajadorInput{
 
 input ClienteInput {
     recibo: String!  
-    usuario: Usuario! 
+    celular: String! 
 }
 
 input LaborInput{
-    trabajador: Trabajador!
-    labor: String!
+    codigo: String!
+    nombre: String!
+    descripcion: String!
 } 
+
+input RealizaInput {
+    trabajador: TrabajadorInput!
+    labor: LaborInput!
+    precioxHora: Float!
+}

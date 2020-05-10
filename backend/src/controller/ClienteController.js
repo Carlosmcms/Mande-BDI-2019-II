@@ -1,24 +1,16 @@
 const { pool } = require('./bdconnect');
 
-const createClient =  async ( trabajador ) =>{
+const CrearCliente =  async ( cliente ) =>{
     try{
-    //   const text =
-    //    `INSERT INTO trabajador (usuario, estado, cantServicios, fotoCedula, fotoPerfil, promedio)
-    //    VALUES($1, $2, $3, $4,  ST_GeomFromText('POINT( $5 )',4326), $6) `;//Este es el que se debe de usar
         const text =
-         `INSERT INTO cliente (recibo, usuario) 
-        VALUES ($1, $2) `;//Pruebas
+         `INSERT INTO cliente (recibo, celular) 
+         VALUES (${cliente.recibo}, ${cliente.celular}) `;
        
-       const values = [
-           cliente.recibo,
-           cliente.usuario
-       ]
-       await pool.query(text, values);
+       await pool.query(text);
        return true;   
-
     } catch(e) {
-        return false;
         console.log(e);
+        return false;
     }
 }
 
@@ -36,5 +28,5 @@ const getCliente = async ( celular ) =>{
 
 module.exports = {
    getCliente,
-   createClient
+   CrearCliente
 };
