@@ -1,10 +1,11 @@
 const { IResolvers } = require( 'graphql-tools');
-const  UserC = require('../controller/UsuarioController');
-const  clienteC = require('../controller/ClienteController');
+const UserC = require('../controller/UsuarioController');
+const clienteC = require('../controller/ClienteController');
 const trabajadorC = require('../controller/TrabajadorController');
 const laborC = require('../controller/LaborController');
 const realizaC = require('../controller/RealizaController');
 const tarjetaC = require('../controller/TarjetaController');
+const servicioC = require('../controller/ServicioController');
 
 const mutation = {
     Mutation: {
@@ -69,15 +70,12 @@ const mutation = {
         },
 
         async crearTarjetaCredit(__, {credito}){
-          /*  const u = {
-                numeroTarjeta: credito.numeroTarjeta,
-                cvc: credito.cvc,
-                fvencimiento: credito.fvencimiento,
-                banco: credito.banco,
-                celular: credito.celular
-            }*/
-            
+          
             return await tarjetaC.crearTarjetaCredit(credito);
+        },
+
+        async crearServicio(__, {servicio}){
+            return await servicioC.crearServicio(servicio);
         }
     }
 }

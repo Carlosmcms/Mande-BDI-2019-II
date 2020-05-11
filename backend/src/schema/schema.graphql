@@ -21,7 +21,7 @@ type Mutation {
    eliminarTrabajo(celular: String!, codigoLabor: String!): Boolean
    registrarTrabajo(celular: String!, codigoLabor: String!, precioxHora: Float!): Boolean
    calificarTrabajador(celular: String!, promedio: Float!, calificacion: Float!): Float!
-
+   crearServicio(servicio: ServicioInput!): Boolean
    crearTarjetaCredit(credito: CreditoInput!): Boolean
 }
 type Usuario {
@@ -57,13 +57,37 @@ type Realiza{
     precioxHora: Float!
 }
 
-
 type Credito {
   numerotarjeta: String!
   banco: String!
   cvc: String!
   fvencimiento: String!
   celular: String!
+}
+type Servicio {
+    codServicio: String!
+    calificacion: Int!
+    horaInicio: String!
+    horaFinal: String!
+    fecha: String!
+    costo: Float!
+    celularCli: String!
+    celularTra: String!
+    codLabor: String!
+    numTarjetaCred: String! 
+}
+
+input ServicioInput {
+    codServicio: String!
+    calificacion: Int!
+    horaInicio: String!
+    horaFinal: String!
+    fecha: String!
+    costo: Float!
+    celularCli: String!
+    celularTra: String!
+    codLabor: String!
+    numTarjetaCred: String! 
 }
 
 input CreditoInput {
