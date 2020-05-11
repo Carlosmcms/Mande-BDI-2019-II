@@ -76,7 +76,7 @@ const query = {
     //Tarjeta credito
     async miTarjetadeCredito(__, { celular }) {
       const tc = await tcreditoC.getTarjetaCredito(celular);
-      console.log(tc)
+      console.log(tc);
       if (tc === undefined) {
         return { error: 'No se encontro ninguna tarjeta de credito' };
       }

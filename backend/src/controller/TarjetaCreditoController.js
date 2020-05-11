@@ -1,5 +1,21 @@
 const { pool } = require('./bdconnect');
 
+const crearTarjetaCredit = async (credito) => {
+  try {
+    //FALTA ENCRIPTAR LOS DATOS DE LA TARJETA DE CREDITO
+    console.log(credito);
+    const text = `INSERT INTO tarjetacredito (numeroTarjeta, cvc, fVencimiento,banco, celular) VALUES ('${credito.numerotarjeta}', 
+      '${credito.cvc}',
+      '${credito.fvencimiento}','${credito.banco}','${credito.celular}')`;
+
+    await pool.query(text);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
 const getTarjetaCredito = async (celular) => {
   try {
     const text = `SELECT *
@@ -17,6 +33,8 @@ const getTarjetaCredito = async (celular) => {
     return undefined;
   }
 };
+
 module.exports = {
   getTarjetaCredito,
+  crearTarjetaCredit,
 };

@@ -1,6 +1,26 @@
 const { pool } = require('./bdconnect');
 const { getUsuario, invertirUbic } = require('./UsuarioController');
 
+const createWorker = async (trabajador) => {
+  try {
+    const text = `INSERT INTO trabajador (celular, estado, cantServicios, fotoCedula, fotoPerfil, promedio) 
+      VALUES ($1, $2, $3, $4, $5, $6) `;
+
+    const values = [
+      trabajador.celular,
+      trabajador.estado,
+      trabajador.cantservicios,
+      trabajador.fotocedula,
+      trabajador.fotoperfil,
+      trabajador.promedio,
+    ];
+    await pool.query(text, values);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
 const getTrabajador = async (celular) => {
   try {
     const text = `SELECT * FROM trabajador WHERE celular='${celular}'`;
@@ -61,9 +81,61 @@ const misLabores = async (celular) => {
     return undefined;
   }
 };
+const CambiarEstadoTrab = async (celular, boolean) => {
+  try {
+    const text = 'UPDATE trabajador SET estado = $1 WHERE celular = $2';
+
+    const values = [boolean, celular];
+    console.log(values);
+    await pool.query(text, values);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+const registrarTrabajo = async (celular, codigoLabor, precioxHora) => {
+  try {
+    console.log(celular, codigoLabor, precioxHora);
+    const text = `INSERT INTO realiza (celulartra, codLabor, precioxHora) VALUES ('${celular}', '${codigoLabor}', ${precioxHora})`;
+
+    await pool.query(text);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+const eliminarTrabajo = async (celular, codigoLabor) => {
+  try {
+    const text = `DELETE from realiza WHERE celulartra = '${celular}' and codlabor = '${codigoLabor}'`;
+    await pool.query(text);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+const calificarTrabajador = async (celular, promedio, calificacion) => {
+  try {
+    promedio = (promedio + calificacion) / 2;
+
+    const text = `UPDATE trabajador SET promedio = ${promedio} WHERE celular = '${celular}'`;
+    await pool.query(text);
+    return promedio;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
 
 module.exports = {
   getTrabajador,
   getTrabajadoxlabor,
   misLabores,
+  createWorker,
+  CambiarEstadoTrab,
+  calificarTrabajador,
+  registrarTrabajo,
+  eliminarTrabajo,
 };
