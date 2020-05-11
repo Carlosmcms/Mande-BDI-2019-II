@@ -52,7 +52,7 @@ CREATE TABLE TarjetaCredito (
     fVencimiento DATE,
     numeroTarjeta VARCHAR,
     banco VARCHAR,
-    celular VARCHAR,
+    celular VARCHAR(10),
     CONSTRAINT TarjetaCredito_PK PRIMARY KEY (numeroTarjeta),
     CONSTRAINT Tarjeta_Cliente_FK FOREIGN KEY (celular) REFERENCES Cliente(celular)
 );
@@ -67,15 +67,14 @@ CREATE TABLE Servicio (
     celularCli CHAR(10)  NOT NULL,
     celularTra CHAR(10)  NOT NULL,
     codLabor CHAR(6)  NOT NULL,
-    numTarjetaCred VARCHAR,
-
+    numTarjetaCred CHAR(6),
+ 
     CONSTRAINT Servicio_PK PRIMARY KEY (codServicio),
     CONSTRAINT Servicio_Cliente_FK FOREIGN KEY (celularCli) REFERENCES Cliente(celular),
     CONSTRAINT Servicio_Trabajador_FK FOREIGN KEY (celularTra) REFERENCES Trabajador(celular),
     CONSTRAINT Servicio_Labor_FK FOREIGN KEY (codLabor) REFERENCES Labor(codLabor),
     CONSTRAINT Servicio_TarjetaCredito_FK FOREIGN KEY (numTarjetaCred) REFERENCES TarjetaCredito(numeroTarjeta),
 );
-
 -- Relaciones
 -- Realiza: Trabajador-Labor
 CREATE TABLE Realiza (
@@ -106,7 +105,21 @@ CREATE VIEW Login as
 SELECT celular, contrasena 
 FROM Usuario;
 
+CREATE OR REPLACE FUNCTION SumarServicio()
+RETURNS TRIGGER AS
+$$
+BEGIN
+UPDATE trabajador SET cantservicios = cantservicios+1
+WHERE new.celulartra = celular;
+RETURN NEW;
+END;
+$$
+LANGUAGE 'plpgsql';
 
+CREATE TRIGGER TrgSumarServicio
+AFTER INSERT ON realiza
+FOR EACH ROW
+EXECUTE PROCEDURE SumarServicio();
 --DATOS DE PRUEBA
 --INSERT INTO trabajador VALUES ('3403134040',2,5.00,'true','una foto chingona','una foto de la cedula'),
  --                            ('3056068989',1,3.00,'true','una foto chingona','una foto de la cedula'),
@@ -119,9 +132,6 @@ FROM Usuario;
 	--					 ('000003','SISTEMAS','Labores de sistemas');
 --INSERT INTO realiza VALUES ('3403134040','000001',5000),('3403134040','000002',4000),('3056068989','000002',8000),('3123123124','000003',2000);
 
-
-
-----Nota agregar prexhora en realiza y borrar en labor y la vista 
 
 
 

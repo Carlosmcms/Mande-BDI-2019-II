@@ -2,9 +2,10 @@ const { pool } = require('./bdconnect');
 
 const crearTarjetaCredit = async (credito) => {
   try {
-    //FALTA ENCRIPTAR LOS DATOS DE LA TARJETA DE CREDITO
-    console.log(credito);
-    const text = `INSERT INTO tarjetacredito (numeroTarjeta, cvc, fVencimiento,banco, celular) VALUES ('${credito.numerotarjeta}', 
+    //La encriptacion y desencriptacion deben de ser ejecutada desde un trigger
+
+    const text = `INSERT INTO tarjetacredito (numeroTarjeta, cvc, fVencimiento,banco, celular) 
+    VALUES (encrypt('${credito.numerotarjeta}', 'password','3des'), 
       '${credito.cvc}',
       '${credito.fvencimiento}','${credito.banco}','${credito.celular}')`;
 
@@ -18,11 +19,11 @@ const crearTarjetaCredit = async (credito) => {
 
 const getTarjetaCredito = async (celular) => {
   try {
-    const text = `SELECT *
+    const text = `SELECT encode(decrypt(numeroTarjeta::bytea,'password','3des'::text), 'escape'::text) AS numeroTarjeta, 
+    cvc, fVencimiento,banco, celular
     FROM TarjetaCredito 
     WHERE celular='${celular}'`;
 
-    //FALTA DESENCRIPTAR LOS DATOS DE LA TARJETA DE CREDITO
     const tr = await pool.query(text);
     if (tr.rows[0] == []) {
       return undefined;
