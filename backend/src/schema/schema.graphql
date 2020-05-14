@@ -29,17 +29,21 @@ type Query {
 
 type Mutation {
   "Anadir un  Usuario"
-  CrearUsuario(usuario: UsuarioInput!): Boolean!
+ 
+  crearUsuario(usuario: UsuarioInput!): Boolean! 
 
-  CrearTrabajador(trabajador: TrabajadorInput!): Boolean
+  crearTrabajador(trabajador: TrabajadorInput!): Boolean 
+  
+  crearCliente(cliente: ClienteInput!): Boolean
 
-  CrearCliente(cliente: ClienteInput!): Boolean
+  crearLabor(labor: LaborInput!): String 
 
-  CrearLabor(labor: LaborInput!): String
+  cambiarEstadoTrab(celular: String!,estado: Boolean!): Boolean
 
-  CambiarEstadoTrab(celular: String!, estado: Boolean!): Boolean
+  modificarUsuario(usuario: UsuarioInput!) Boolean
 
   eliminarTrabajo(celular: String!, codigoLabor: String!): Boolean
+  
 
   registrarTrabajo(
     celular: String!

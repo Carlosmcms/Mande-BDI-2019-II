@@ -26,7 +26,7 @@ const login = async (celular, contrasena) => {
     return c.contrasena;
   } catch (e) {
     console.log(e);
-    return false; 
+    return false;
   }
 };
 
@@ -40,6 +40,24 @@ const createUser = async (usuario) => {
             crypt ('${usuario.contrasena}', gen_salt ('md5')),'${usuario.email}', '${usuario.cedula}') `;
 
     await pool.query(text);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+};
+
+const modificarUsuario = async (usuario) => {
+  try {
+    const ubic = invertirUbic(usuario.direccion);
+    const text = `UPDATE  usuario 
+    SET nombre = '${usuario.nombre}', apellido = '${usuario.apellido}', 
+        direccion = ST_GeomFromText('POINT(${ubic})',4326), 
+        contrasena = crypt ('${usuario.contrasena}'gen_salt ('md5'))        
+        WHERE celular = '${usuario.celular}'`;
+
+    await pool.query(text);
+
     return true;
   } catch (e) {
     console.log(e);
@@ -83,4 +101,5 @@ module.exports = {
   createUser,
   getUsuario,
   invertirUbic,
+  modificarUsuario,
 };

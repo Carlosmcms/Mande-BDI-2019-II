@@ -82,6 +82,10 @@ const mutation = {
     async crearServicio(__, { servicio }) {
       return await servicioC.crearServicio(servicio);
     },
+
+    async modificarUsuario(__, { usuario }) {
+      return await UserC.modificarUsuario(usuario);
+    },
   },
 };
 
