@@ -1,0 +1,37 @@
+.list-container { 
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: grid;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 1px;
+    z-index: 2;
+  }
+  
+  .list-container::before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: 2;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+  
+    background: rgba(0,168,255,0.0);
+  }
+
+  .wrap-list-container {
+    height: 70%;
+    width: 25rem;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 30px 55px 30px 55px;
+    box-shadow: 0px 0px 19px 1px #616161;
+    z-index: 2;
+  }
